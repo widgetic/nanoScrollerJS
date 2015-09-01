@@ -645,7 +645,7 @@
     ###
     restore: ->
       @stopped = false
-      do @pane.show if not @iOSNativeScrolling
+      @pane.removeClass('disabled').addClass('enabled') if not @iOSNativeScrolling
       do @addEvents
       return
 
@@ -711,11 +711,11 @@
       # scroll sets the position of the @slider
       do @events.scroll
 
-      do @pane.show
+      @pane.removeClass('disabled').addClass('enabled')
       @isActive = true
       if (content.scrollHeight is content.clientHeight) or (
           @pane.outerHeight(true) >= content.scrollHeight and contentStyleOverflowY isnt SCROLL)
-        do @pane.hide
+        @pane.removeClass('enabled').addClass('disabled')
         @isActive = false
       else if @el.clientHeight is content.scrollHeight and contentStyleOverflowY is SCROLL
         do @slider.hide
@@ -777,9 +777,9 @@
       @example
           $(".nano").nanoScroller({ scrollTop: value });
     ###
-    scrollTop: (offsetY) ->
+    scrollTop: (options) ->
       return unless @isActive
-      @$content.scrollTop(+offsetY).trigger(MOUSEWHEEL) # Update scrollbar position by triggering one of the scroll events
+      @$content.stop(true, false).animate({scrollTop: +options[0]}, options[1]).trigger(MOUSEWHEEL) # Update scrollbar position by triggering one of the scroll events
       @stop().restore()
       this
 
@@ -791,9 +791,10 @@
       @example
           $(".nano").nanoScroller({ scrollTo: $('#a_node') });
     ###
-    scrollTo: (node) ->
+    scrollTo: (options) ->
       return unless @isActive
-      @scrollTop @$el.find(node).get(0).offsetTop
+      if options[1]? then duration = parseInt(options[1], 10) else duration = 0
+      @scrollTop [@$el.find(options[0]).get(0).offsetTop, duration]
       this
 
     ###*
@@ -810,7 +811,7 @@
         @scrollRAF = null
       @stopped = true
       do @removeEvents
-      do @pane.hide if not @iOSNativeScrolling
+      @pane.removeClass('enabled').addClass('disabled') if not @iOSNativeScrolling
       this
 
     ###*

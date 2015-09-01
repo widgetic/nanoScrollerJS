@@ -706,7 +706,7 @@
     NanoScroll.prototype.restore = function() {
       this.stopped = false;
       if (!this.iOSNativeScrolling) {
-        this.pane.show();
+        this.pane.removeClass('disabled').addClass('enabled');
       }
       this.addEvents();
     };
@@ -767,10 +767,10 @@
       this.paneTop = paneTop;
       this.slider.height(sliderHeight);
       this.events.scroll();
-      this.pane.show();
+      this.pane.removeClass('disabled').addClass('enabled');
       this.isActive = true;
       if ((content.scrollHeight === content.clientHeight) || (this.pane.outerHeight(true) >= content.scrollHeight && contentStyleOverflowY !== SCROLL)) {
-        this.pane.hide();
+        this.pane.removeClass('enabled').addClass('disabled');
         this.isActive = false;
       } else if (this.el.clientHeight === content.scrollHeight && contentStyleOverflowY === SCROLL) {
         this.slider.hide();
@@ -845,11 +845,13 @@
           $(".nano").nanoScroller({ scrollTop: value });
      */
 
-    NanoScroll.prototype.scrollTop = function(offsetY) {
+    NanoScroll.prototype.scrollTop = function(options) {
       if (!this.isActive) {
         return;
       }
-      this.$content.scrollTop(+offsetY).trigger(MOUSEWHEEL);
+      this.$content.stop(true, false).animate({
+        scrollTop: +options[0]
+      }, options[1]).trigger(MOUSEWHEEL);
       this.stop().restore();
       return this;
     };
@@ -864,11 +866,17 @@
           $(".nano").nanoScroller({ scrollTo: $('#a_node') });
      */
 
-    NanoScroll.prototype.scrollTo = function(node) {
+    NanoScroll.prototype.scrollTo = function(options) {
+      var duration;
       if (!this.isActive) {
         return;
       }
-      this.scrollTop(this.$el.find(node).get(0).offsetTop);
+      if (options[1] != null) {
+        duration = parseInt(options[1], 10);
+      } else {
+        duration = 0;
+      }
+      this.scrollTop([this.$el.find(options[0]).get(0).offsetTop, duration]);
       return this;
     };
 
@@ -890,7 +898,7 @@
       this.stopped = true;
       this.removeEvents();
       if (!this.iOSNativeScrolling) {
-        this.pane.hide();
+        this.pane.removeClass('enabled').addClass('disabled');
       }
       return this;
     };
