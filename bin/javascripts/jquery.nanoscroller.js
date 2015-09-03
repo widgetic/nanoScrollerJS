@@ -546,7 +546,7 @@
         })(this),
         up: (function(_this) {
           return function(e) {
-            document.body.style.userSelect = document.body.style.webkitUserSelect = document.body.style.mozUserSelect = document.body.style.msUserSelect = document.body.style.oUserSelect = 'initial';
+            document.body.style.userSelect = document.body.style.webkitUserSelect = document.body.style.mozUserSelect = document.body.style.msUserSelect = document.body.style.oUserSelect = '';
             _this.isBeingDragged = false;
             _this.pane.removeClass(_this.options.activeClass);
             _this.doc.unbind(MOUSEMOVE, _this.events[DRAG]).unbind(MOUSEUP, _this.events[UP]);

@@ -524,7 +524,7 @@
             document.body.style.webkitUserSelect =
             document.body.style.mozUserSelect =
             document.body.style.msUserSelect =
-            document.body.style.oUserSelect = 'initial'
+            document.body.style.oUserSelect = ''
 
           @isBeingDragged = false
           @pane.removeClass @options.activeClass
