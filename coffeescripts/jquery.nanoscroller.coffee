@@ -493,6 +493,12 @@
     createEvents: ->
       @events =
         down: (e) =>
+          document.body.style.userSelect =
+            document.body.style.webkitUserSelect =
+            document.body.style.mozUserSelect =
+            document.body.style.msUserSelect =
+            document.body.style.oUserSelect = 'none'
+
           @isBeingDragged  = true
           @offsetY = e.pageY - @slider.offset().top
           @offsetY = 0 unless @slider.is e.target
@@ -502,7 +508,7 @@
             .bind(MOUSEUP, @events[UP])
 
           @body.bind(MOUSEENTER, @events[ENTER])
-          false
+          true
 
         drag: (e) =>
           @sliderY = e.pageY - @$el.offset().top - @paneTop - (@offsetY or @sliderHeight * 0.5)
@@ -511,9 +517,15 @@
             @$el.trigger 'scrollend'
           else if @contentScrollTop is 0 and @prevScrollTop isnt 0
             @$el.trigger 'scrolltop'
-          false
+          true
 
         up: (e) =>
+          document.body.style.userSelect =
+            document.body.style.webkitUserSelect =
+            document.body.style.mozUserSelect =
+            document.body.style.msUserSelect =
+            document.body.style.oUserSelect = 'initial'
+
           @isBeingDragged = false
           @pane.removeClass @options.activeClass
           @doc
@@ -521,7 +533,7 @@
             .unbind(MOUSEUP, @events[UP])
 
           @body.unbind(MOUSEENTER, @events[ENTER])
-          false
+          true
 
         resize: (e) =>
           do @reset
@@ -531,7 +543,7 @@
           @sliderY = (e.offsetY or e.originalEvent.layerY) - (@sliderHeight * 0.5)
           do @scroll
           @events.down e
-          false
+          true
 
         scroll: (e) =>
           do @updateScrollValues
@@ -561,7 +573,7 @@
           delta = e.delta or e.wheelDelta or (e.originalEvent and e.originalEvent.wheelDelta) or -e.detail or (e.originalEvent and -e.originalEvent.detail)
           @sliderY += -delta / 3 if delta
           do @scroll
-          false
+          true
 
         enter: (e) =>
           return unless @isBeingDragged

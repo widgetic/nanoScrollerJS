@@ -520,6 +520,7 @@
       this.events = {
         down: (function(_this) {
           return function(e) {
+            document.body.style.userSelect = document.body.style.webkitUserSelect = document.body.style.mozUserSelect = document.body.style.msUserSelect = document.body.style.oUserSelect = 'none';
             _this.isBeingDragged = true;
             _this.offsetY = e.pageY - _this.slider.offset().top;
             if (!_this.slider.is(e.target)) {
@@ -528,7 +529,7 @@
             _this.pane.addClass(_this.options.activeClass);
             _this.doc.bind(MOUSEMOVE, _this.events[DRAG]).bind(MOUSEUP, _this.events[UP]);
             _this.body.bind(MOUSEENTER, _this.events[ENTER]);
-            return false;
+            return true;
           };
         })(this),
         drag: (function(_this) {
@@ -540,16 +541,17 @@
             } else if (_this.contentScrollTop === 0 && _this.prevScrollTop !== 0) {
               _this.$el.trigger('scrolltop');
             }
-            return false;
+            return true;
           };
         })(this),
         up: (function(_this) {
           return function(e) {
+            document.body.style.userSelect = document.body.style.webkitUserSelect = document.body.style.mozUserSelect = document.body.style.msUserSelect = document.body.style.oUserSelect = 'initial';
             _this.isBeingDragged = false;
             _this.pane.removeClass(_this.options.activeClass);
             _this.doc.unbind(MOUSEMOVE, _this.events[DRAG]).unbind(MOUSEUP, _this.events[UP]);
             _this.body.unbind(MOUSEENTER, _this.events[ENTER]);
-            return false;
+            return true;
           };
         })(this),
         resize: (function(_this) {
@@ -562,7 +564,7 @@
             _this.sliderY = (e.offsetY || e.originalEvent.layerY) - (_this.sliderHeight * 0.5);
             _this.scroll();
             _this.events.down(e);
-            return false;
+            return true;
           };
         })(this),
         scroll: (function(_this) {
@@ -606,7 +608,7 @@
               _this.sliderY += -delta / 3;
             }
             _this.scroll();
-            return false;
+            return true;
           };
         })(this),
         enter: (function(_this) {
